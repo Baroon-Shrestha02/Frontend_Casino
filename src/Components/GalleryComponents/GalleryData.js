@@ -1,0 +1,141 @@
+const allImages = [
+  {
+    id: 1,
+    url: "uploads/gallery/img1.jpg",
+    title: "Casino Floor",
+  },
+  {
+    id: 2,
+    url: "uploads/gallery/img2.jpg",
+    title: "Poker Table",
+    likes: 189,
+  },
+  {
+    id: 3,
+    url: "uploads/gallery/img3.jpg",
+    title: "Slot Machines",
+    likes: 456,
+  },
+  {
+    id: 4,
+    url: "uploads/gallery/img4.jpg",
+    title: "Blackjack Game",
+    likes: 321,
+  },
+  {
+    id: 5,
+    url: "uploads/gallery/img5.jpg",
+    title: "Roulette Wheel",
+    likes: 278,
+  },
+  {
+    id: 6,
+    url: "uploads/gallery/img6.jpg",
+    title: "Dealer Training",
+    likes: 167,
+  },
+  {
+    id: 7,
+    url: "uploads/gallery/img7.jpg",
+    title: "Casino Lights",
+    likes: 389,
+  },
+  {
+    id: 8,
+    url: "uploads/gallery/img10.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 9,
+    url: "uploads/gallery/img12.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 10,
+    url: "uploads/gallery/img13.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 11,
+    url: "uploads/gallery/img14.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 12,
+    url: "uploads/gallery/img15.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 13,
+    url: "uploads/gallery/img16.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 14,
+    url: "uploads/gallery/img17.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 15,
+    url: "uploads/gallery/img18.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 16,
+    url: "uploads/gallery/img19.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 17,
+    url: "uploads/gallery/img20.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 18,
+    url: "uploads/gallery/img21.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 19,
+    url: "uploads/gallery/img22.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 20,
+    url: "uploads/gallery/img23.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 21,
+    url: "uploads/gallery/img24.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 22,
+    url: "uploads/gallery/img25.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+  {
+    id: 23,
+    url: "uploads/gallery/img2.jpg",
+    title: "Gaming Area",
+    likes: 234,
+  },
+];
+
+export default allImages;
