@@ -22,10 +22,11 @@ import ScrollToTop from "./Components/HelperComponents/ScrollToTop";
 import BlogsPage from "./Pages/BlogsPage";
 import FAQPages from "./Pages/FAQPages";
 import TestimonialsPage from "./Pages/TestimonialsPage";
-import Login from "./Components/AuthComponents/Login.Jsx";
+
 import CareerDescription from "./Components/CareerComponents/CareerDescription";
 
 import AddCareerForm from "./Components/CareerComponents/AddCareerForm";
+import Login from "./Components/AuthComponents/Login";
 
 function App() {
   return (
