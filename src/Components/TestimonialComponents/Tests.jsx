@@ -54,7 +54,9 @@ export default function Tests() {
 
     setIsDeleting(true);
     try {
-      await api.delete(`/delete/${deleteConfirm._id}`);
+      await api.delete(`/delete/${deleteConfirm._id}`, {
+        withCredentials: true,
+      });
 
       setTestimonials((prev) =>
         prev.filter((t) => t._id !== deleteConfirm._id)

@@ -3,8 +3,9 @@ import { X, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import GalleryHero from "./GalleryHero";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../Redux/Slices/UserSlice";
+import api from "../../Utils/api"; // axios instance
 
-// LazyMotionItem simplified (no loading animation)
+// Lazy loader
 const LazyMotionItem = ({ type, src }) => {
   return type === "video" ? (
     <video
@@ -24,159 +25,61 @@ export default function Gallery() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
 
   const user = useSelector(selectUser);
   const isAdmin = user?.role === "admin";
 
+  console.log(user.role);
+
+  // Fetch images from backend
+  const getImages = async () => {
+    try {
+      const res = await api.get("/get-images");
+      setMediaFiles(res.data.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    getImages();
   }, []);
 
-  // Your current static media list (will be replaced with API)
-  const mediaFiles = [
-    {
-      src: "/uploads/gallery/img1.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img2.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img3.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img4.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img5.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img6.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img7.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img10.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img12.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img13.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img14.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img15.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img16.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img17.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img18.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img19.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img20.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img21.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img22.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img23.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img24.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-    {
-      src: "/uploads/gallery/img25.jpg",
-      type: "image",
-      alt: "Gallery",
-      title: "Sample",
-    },
-  ];
+  // Upload image
+  const uploadImage = async () => {
+    if (!imageFile) return alert("Please select an image");
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    try {
+      const res = await api.post("/add-images", formData);
+      setIsAddModalOpen(false);
+      setImageFile(null);
+      getImages(); // refresh
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete image
+  const deleteImage = async (id) => {
+    if (!window.confirm("Delete this image?")) return;
+
+    try {
+      await api.delete(`/delete-images/${id}`);
+      getImages();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const openModal = (i) => {
     setSelectedIndex(i);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setSelectedIndex(null);
     setIsModalOpen(false);
@@ -184,18 +87,27 @@ export default function Gallery() {
 
   const nextMedia = () =>
     setSelectedIndex((prev) => (prev + 1) % mediaFiles.length);
+
   const prevMedia = () =>
     setSelectedIndex((prev) => (prev === 0 ? mediaFiles.length - 1 : prev - 1));
 
-  const deleteImage = (id) => {
-    alert("Delete logic here: " + id);
-  };
-
+  // GRID VIEW
   const renderGrid = () => (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+      {isAdmin && (
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-md"
+          >
+            <Plus size={20} />
+            Add New Image
+          </button>
+        </div>
+      )}
       {mediaFiles.map((file, index) => (
         <div
-          key={index}
+          key={file._id}
           className="relative rounded-xl overflow-hidden shadow-md hover:shadow-xl cursor-pointer"
         >
           {/* Admin Delete Button */}
@@ -203,7 +115,7 @@ export default function Gallery() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                deleteImage(file._id || index);
+                deleteImage(file._id);
               }}
               className="absolute top-2 right-2 bg-black/60 hover:bg-black p-1 rounded-full text-white"
             >
@@ -213,7 +125,7 @@ export default function Gallery() {
 
           {/* Image */}
           <div onClick={() => openModal(index)}>
-            <LazyMotionItem type={file.type} src={file.src} />
+            <LazyMotionItem type={file.type} src={file.image?.[0]?.url} />
           </div>
         </div>
       ))}
@@ -238,13 +150,13 @@ export default function Gallery() {
       {isAdmin && (
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-xl"
+          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-xl z-99"
         >
           <Plus size={24} />
         </button>
       )}
 
-      {/* Fullscreen Image Modal */}
+      {/* FULLSCREEN MODAL */}
       {isModalOpen && selectedIndex !== null && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
           <button
@@ -264,12 +176,12 @@ export default function Gallery() {
           <div className="max-w-5xl max-h-[85vh]">
             {mediaFiles[selectedIndex].type === "image" ? (
               <img
-                src={mediaFiles[selectedIndex].src}
+                src={mediaFiles[selectedIndex].image?.[0]?.url}
                 className="max-w-full max-h-[85vh] object-contain rounded"
               />
             ) : (
               <video
-                src={mediaFiles[selectedIndex].src}
+                src={mediaFiles[selectedIndex].image?.[0]?.url}
                 autoPlay
                 loop
                 muted
@@ -287,13 +199,17 @@ export default function Gallery() {
         </div>
       )}
 
-      {/* ADD IMAGE MODAL (ADMIN) */}
-      {isAddModalOpen && (
+      {/* ADD IMAGE MODAL */}
+      {isAddModalOpen && isAdmin && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
           <div className="bg-white rounded-lg w-full max-w-md p-6 relative">
             <h2 className="text-xl font-semibold mb-4">Add New Image</h2>
 
-            <input type="file" className="w-full border p-2 rounded" />
+            <input
+              type="file"
+              className="w-full border p-2 rounded"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
 
             <div className="flex justify-end gap-4 mt-6">
               <button
@@ -302,7 +218,10 @@ export default function Gallery() {
               >
                 Cancel
               </button>
-              <button className="py-2 px-4 bg-blue-600 text-white rounded">
+              <button
+                onClick={uploadImage}
+                className="py-2 px-4 bg-blue-600 text-white rounded"
+              >
                 Upload
               </button>
             </div>
