@@ -32,7 +32,7 @@ export default function CareerPosts() {
     email: "",
     phone: "",
     message: "",
-    resume: null,
+    files: null,
   });
 
   const user = useSelector(selectUser);
@@ -95,7 +95,7 @@ export default function CareerPosts() {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      resume: e.target.files[0],
+      files: e.target.files[0],
     });
   };
 
@@ -112,8 +112,8 @@ export default function CareerPosts() {
       fd.append("jobTitle", selectedJob?.title);
       fd.append("jobId", selectedJob?._id);
 
-      if (formData.resume) {
-        fd.append("file", formData.resume);
+      if (formData.files) {
+        fd.append("file", formData.files);
       }
 
       await api.post("/send-mail", fd, {
@@ -128,7 +128,7 @@ export default function CareerPosts() {
         email: "",
         phone: "",
         message: "",
-        resume: null,
+        files: null,
       });
 
       setSelectedJob(null);
@@ -534,6 +534,7 @@ export default function CareerPosts() {
                     type="file"
                     accept=".pdf,.doc,.docx"
                     id="resumeUpload"
+                    name="file"
                     className="hidden"
                     onChange={handleFileChange}
                   />
@@ -546,9 +547,9 @@ export default function CareerPosts() {
                   >
                     <FaFileUpload className="text-4xl text-gray-400 mx-auto mb-2" />
 
-                    {formData.resume ? (
+                    {formData.files ? (
                       <p className="text-gray-700 font-medium">
-                        {formData.resume.name}
+                        {formData.files.name}
                       </p>
                     ) : (
                       <>

@@ -46,7 +46,6 @@ export default function CareerCV() {
       if (res.data.success) {
         setStatusMessage("✅ CV sent successfully!");
 
-        // Reset form
         setFormData({
           name: "",
           course: "",
@@ -56,7 +55,6 @@ export default function CareerCV() {
           file: null,
         });
 
-        // Reset file input manually
         if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
         setStatusMessage("❌ Failed to send CV. Please try again.");

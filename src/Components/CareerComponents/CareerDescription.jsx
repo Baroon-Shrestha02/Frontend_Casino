@@ -33,7 +33,7 @@ export default function CareerDescription() {
     email: "",
     phone: "",
     message: "",
-    resume: null,
+    files: null,
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -74,7 +74,7 @@ export default function CareerDescription() {
   const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      resume: e.target.files?.[0] || null,
+      files: e.target.files?.[0] || null,
     });
   };
 
@@ -93,8 +93,8 @@ export default function CareerDescription() {
       fd.append("jobTitle", selectedJob.title);
       fd.append("jobId", selectedJob._id);
 
-      if (formData.resume) {
-        fd.append("file", formData.resume);
+      if (formData.files) {
+        fd.append("file", formData.files);
       }
 
       await api.post("/send-mail", fd, {
@@ -109,7 +109,7 @@ export default function CareerDescription() {
         email: "",
         phone: "",
         message: "",
-        resume: null,
+        files: null,
       });
     } catch (err) {
       console.error("Failed to submit application:", err);
@@ -469,6 +469,7 @@ export default function CareerDescription() {
                     id="descriptionResumeUpload"
                     type="file"
                     accept=".pdf,.doc,.docx"
+                    name="file"
                     className="hidden"
                     onChange={handleFileChange}
                   />
@@ -481,9 +482,9 @@ export default function CareerDescription() {
                     className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-red-500 transition-colors cursor-pointer"
                   >
                     <FaFileUpload className="text-4xl text-gray-400 mx-auto mb-2" />
-                    {formData.resume ? (
+                    {formData.files ? (
                       <p className="text-gray-700 font-medium">
-                        {formData.resume.name}
+                        {formData.files.name}
                       </p>
                     ) : (
                       <>
