@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaMapMarkerAlt,
   FaClock,
@@ -15,12 +16,11 @@ import {
   FaEnvelope,
   FaPhone,
   FaFileUpload,
+  FaArrowRight,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { User } from "lucide-react";
 
 import api from "../../Utils/api";
-import { User } from "lucide-react";
 
 export default function CareerDescription() {
   const { id } = useParams();
@@ -33,15 +33,15 @@ export default function CareerDescription() {
     email: "",
     phone: "",
     message: "",
+    resume: null,
   });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const res = await api.get(`/posts/${id}`);
-        if (res.data.success) {
-          setJob(res.data.findPost);
-        }
+        if (res.data.success) setJob(res.data.findPost);
       } catch (err) {
         console.error("Failed to load job:", err);
       } finally {
@@ -68,17 +68,55 @@ export default function CareerDescription() {
   }, [id]);
 
   const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      resume: e.target.files?.[0] || null,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Application submitted:", formData);
-    setSelectedJob(null);
-    setFormData({ fullName: "", email: "", phone: "", message: "" });
+    if (!selectedJob) return;
+
+    try {
+      setSubmitting(true);
+
+      const fd = new FormData();
+      fd.append("name", formData.fullName);
+      fd.append("email", formData.email);
+      fd.append("phone", formData.phone);
+      fd.append("message", formData.message);
+      fd.append("jobTitle", selectedJob.title);
+      fd.append("jobId", selectedJob._id);
+
+      if (formData.resume) {
+        fd.append("file", formData.resume);
+      }
+
+      await api.post("/send-mail", fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Application sent successfully!");
+
+      setSelectedJob(null);
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        message: "",
+        resume: null,
+      });
+    } catch (err) {
+      console.error("Failed to submit application:", err);
+      alert("Failed to send application. Please try again later.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -109,8 +147,8 @@ export default function CareerDescription() {
 
   return (
     <>
-      {/* Header Image Banner */}
-      <div className=" p-3 md:px-6">
+      {/* Header Banner */}
+      <div className="p-3 md:px-6">
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -121,9 +159,7 @@ export default function CareerDescription() {
             alt={job.title}
             className="w-full h-full object-cover"
           />
-
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/60" />
-
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -132,13 +168,13 @@ export default function CareerDescription() {
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-3">{job.title}</h1>
             <p className="flex items-center gap-2 text-lg text-white/90">
-              <FaMapMarkerAlt /> {job.location} | <User /> Vacancy : 2
+              <FaMapMarkerAlt /> {job.location} | <User /> Vacancies: 2
             </p>
           </motion.div>
         </motion.section>
       </div>
 
-      {/* Main Content with Sidebar */}
+      {/* Main Content */}
       <section className="container mx-auto px-6 py-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -152,121 +188,154 @@ export default function CareerDescription() {
           </Link>
         </motion.div>
 
-        <div className="">
-          {/* Main Content - Left Side */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Single Unified Info Card */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Job Info Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white shadow-lg rounded-2xl p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white"
+          >
+            {/* Quick Info */}
+            <div className="grid sm:grid-cols-3 gap-6 mb-8 pb-8 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="bg-red-100 p-3 rounded-lg">
+                  <FaBriefcase className="text-red-600 text-lg" />
+                </div>
+                <div>
+                  <p className="text-sm mb-1">Job Type</p>
+                  <p className="font-semibold">{job.type}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="bg-green-100 p-3 rounded-lg">
+                  <FaMoneyBillWave className="text-green-600 text-lg" />
+                </div>
+                <div>
+                  <p className="text-sm mb-1">Salary</p>
+                  <p className="font-semibold">{job.salary}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="bg-blue-100 p-3 rounded-lg">
+                  <FaClock className="text-blue-600 text-lg" />
+                </div>
+                <div>
+                  <p className="text-sm mb-1">Experience</p>
+                  <p className="font-semibold">{job.experience}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-2">Job Description</h2>
+              <p className="leading-relaxed">{job.description}</p>
+            </div>
+
+            {/* Highlights */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">Highlights</h2>
+              <ul className="space-y-3">
+                {job.highlights.map((point, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Requirements */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">Requirements</h2>
+              <ul className="space-y-3">
+                {job.requirements.map((req, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <span>{req}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Benefits */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4">Benefits</h2>
+              <ul className="space-y-3">
+                {job.benefits.map((benefit, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Deadline & Apply */}
+            <div className="pt-6 border-t border-gray-100">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <FaCalendarAlt className="text-red-600 text-xl" />
+                  <div>
+                    <p className="text-sm">Application Deadline</p>
+                    <p className="font-semibold">{job.deadline}</p>
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedJob(job)}
+                  className="bg-red-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  <FaPaperPlane /> Apply Now
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Related Jobs */}
+          {relatedJobs.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white shadow-lg rounded-2xl p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white"
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
             >
-              {/* Job Quick Info */}
-              <div className="grid sm:grid-cols-3  gap-6 mb-8 pb-8 border-b border-gray-100 ">
-                <div className="flex items-center gap-3">
-                  <div className="bg-red-100 p-3 rounded-lg">
-                    <FaBriefcase className="text-red-600 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm  mb-1">Job Type</p>
-                    <p className=" font-semibold">{job.type}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <FaMoneyBillWave className="text-green-600 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm  mb-1">Salary</p>
-                    <p className=" font-semibold">{job.salary}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <FaClock className="text-blue-600 text-lg" />
-                  </div>
-                  <div>
-                    <p className="text-sm  mb-1">Experience</p>
-                    <p className=" font-semibold">{job.experience}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-">Job Description</h2>
-                <p className=" leading-relaxed">{job.description}</p>
-              </div>
-
-              {/* Highlights */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 ">Highlights</h2>
-                <ul className="space-y-3">
-                  {job.highlights.map((point, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
-                      <span className="">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Requirements */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 ">Requirements</h2>
-                <ul className="space-y-3">
-                  {job.requirements.map((req, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
-                      <span className="">{req}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Benefits */}
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-4 ">Benefits</h2>
-                <ul className="space-y-3">
-                  {job.benefits.map((benefit, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
-                      <span className="">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Deadline & Apply - Bottom Section */}
-              <div className="pt-6 border-t border-gray-100">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <FaCalendarAlt className="text-red-600 text-xl" />
-                    <div>
-                      <p className="text-sm ">Application Deadline</p>
-                      <p className=" font-semibold">{job.deadline}</p>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedJob(job)}
-                    className="bg-red-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                You Might Also Like
+              </h3>
+              <div className="grid gap-6 md:grid-cols-2">
+                {relatedJobs.map((item) => (
+                  <div
+                    key={item._id}
+                    className="border border-gray-100 rounded-xl p-5 flex flex-col gap-3 hover:border-red-200 transition-colors"
                   >
-                    <FaPaperPlane /> Apply Now
-                  </motion.button>
-                </div>
+                    <h4 className="text-xl font-semibold text-gray-800">
+                      {item.title}
+                    </h4>
+                    <p className="text-gray-600 flex items-center gap-2 text-sm">
+                      <FaMapMarkerAlt /> {item.location}
+                    </p>
+                    <p className="text-gray-600 flex items-center gap-2 text-sm">
+                      <FaClock /> {item.type}
+                    </p>
+                    <Link
+                      to={`/careers/${item._id}`}
+                      className="mt-2 inline-flex items-center gap-2 text-red-600 font-semibold hover:text-red-700"
+                    >
+                      View Details <FaArrowRight />
+                    </Link>
+                  </div>
+                ))}
               </div>
             </motion.div>
-          </div>
+          )}
         </div>
       </section>
 
-      {/* Enhanced Apply Modal */}
+      {/* Apply Modal */}
       <AnimatePresence>
         {selectedJob && (
           <motion.div
@@ -287,7 +356,7 @@ export default function CareerDescription() {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                    Apply for Position
+                    Apply for Casino Dealer Position
                   </h2>
                   <p className="text-lg text-red-600 font-semibold">
                     {selectedJob.title}
@@ -304,6 +373,7 @@ export default function CareerDescription() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Full Name */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -318,12 +388,13 @@ export default function CareerDescription() {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
                     placeholder="John Doe"
                     required
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
                   />
                 </motion.div>
 
+                {/* Email */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -338,12 +409,13 @@ export default function CareerDescription() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
                     placeholder="john@example.com"
                     required
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
                   />
                 </motion.div>
 
+                {/* Phone */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -358,73 +430,111 @@ export default function CareerDescription() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="+1 234 567 8900"
+                    placeholder="+977 984-XXXXXXX"
                     required
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
                   />
                 </motion.div>
 
+                {/* Cover Letter */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.6 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
-                    Cover Letter / Message
+                    Message / Cover Letter
                   </label>
                   <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors resize-none"
                     rows="5"
-                    placeholder="Tell us why you're a great fit for this position..."
+                    placeholder="Tell us why you would be a great casino dealer..."
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors resize-none"
                   />
                 </motion.div>
 
+                {/* Resume Upload */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.65 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
                     <FaFileUpload className="inline mr-2 text-red-600" />
                     Upload Resume (Optional)
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-red-500 transition-colors cursor-pointer">
+                  <input
+                    id="descriptionResumeUpload"
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <div
+                    onClick={() =>
+                      document
+                        .getElementById("descriptionResumeUpload")
+                        ?.click()
+                    }
+                    className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-red-500 transition-colors cursor-pointer"
+                  >
                     <FaFileUpload className="text-4xl text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-600">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-sm text-gray-400 mt-1">
-                      PDF, DOC, DOCX (Max 5MB)
-                    </p>
+                    {formData.resume ? (
+                      <p className="text-gray-700 font-medium">
+                        {formData.resume.name}
+                      </p>
+                    ) : (
+                      <>
+                        <p className="text-gray-600">
+                          Click to upload or drag and drop
+                        </p>
+                        <p className="text-sm text-gray-400 mt-1">
+                          PDF, DOC, DOCX (Max 5MB)
+                        </p>
+                      </>
+                    )}
                   </div>
                 </motion.div>
 
+                {/* Submit & Cancel */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
+                  transition={{ delay: 0.7 }}
                   className="flex gap-4 justify-end mt-8 pt-6 border-t"
                 >
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => setSelectedJob(null)}
                     type="button"
+                    onClick={() => setSelectedJob(null)}
                     className="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors"
                   >
                     Cancel
                   </motion.button>
-
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl flex items-center gap-2"
+                    disabled={submitting}
+                    className={`px-8 py-3 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center gap-2 ${
+                      submitting
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-red-600 hover:bg-red-700 text-white"
+                    }`}
                   >
-                    <FaPaperPlane /> Submit Application
+                    {submitting ? (
+                      <>
+                        <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <FaPaperPlane /> Submit Application
+                      </>
+                    )}
                   </motion.button>
                 </motion.div>
               </form>
@@ -432,9 +542,6 @@ export default function CareerDescription() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="container mx-auto">
-        <h1>Uplift your career with us</h1>
-      </div>
     </>
   );
 }

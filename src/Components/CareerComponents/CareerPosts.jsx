@@ -103,24 +103,40 @@ export default function CareerPosts() {
     e.preventDefault();
     setSubmitting(true);
 
-    const sendData = new FormData();
-    sendData.append("fullName", formData.fullName);
-    sendData.append("email", formData.email);
-    sendData.append("phone", formData.phone);
-    sendData.append("message", formData.message);
-    if (formData.resume) sendData.append("resume", formData.resume);
-
     try {
-      // await api.post("/apply", sendData, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
+      const fd = new FormData();
+      fd.append("name", formData.fullName);
+      fd.append("email", formData.email);
+      fd.append("phone", formData.phone);
+      fd.append("message", formData.message);
+      fd.append("jobTitle", selectedJob?.title);
+      fd.append("jobId", selectedJob?._id);
 
-      alert("Application Submitted!");
+      if (formData.resume) {
+        fd.append("file", formData.resume);
+      }
+
+      await api.post("/send-mail", fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Application sent successfully!");
+
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        message: "",
+        resume: null,
+      });
+
+      setSelectedJob(null);
     } catch (error) {
-      console.log(error);
+      console.error("Error sending application:", error);
+      alert("Failed to send application. Try again later.");
     } finally {
       setSubmitting(false);
-      setSelectedJob(null);
     }
   };
 

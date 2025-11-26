@@ -457,12 +457,12 @@ export default function Navbar2() {
                     </AnimatePresence>
                   </div>
 
-                  <Link
+                  {/* <Link
                     to="/gallery"
                     className="text-[#f9f8f0] transition-colors font-medium"
                   >
                     Gallery
-                  </Link>
+                  </Link> */}
                   <Link
                     to="/blogs"
                     className="text-[#f9f8f0] transition-colors font-medium"
@@ -659,13 +659,13 @@ export default function Navbar2() {
                     </div>
                   </div>
 
-                  <Link
+                  {/* <Link
                     to="/gallery"
                     className="text-[#f9f8f0] hover:text-[#E1C386] transition-colors py-3 text-xl font-medium border-b border-gray-700"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Gallery
-                  </Link>
+                  </Link> */}
 
                   <Link
                     to="/blogs"

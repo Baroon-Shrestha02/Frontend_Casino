@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef } from "react";
 import api from "../../Utils/api";
 
 export default function CareerCV() {
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     name: "",
     course: "",
     email: "",
     phone: "",
+    message: "",
     file: null,
   });
 
@@ -30,26 +32,34 @@ export default function CareerCV() {
     try {
       const data = new FormData();
       data.append("name", formData.name);
-      data.append("course", formData.course);
+      data.append("course", formData.course || "Not Taken");
       data.append("email", formData.email);
       data.append("phone", formData.phone);
+      data.append("message", formData.message || "Not Provided");
+
       if (formData.file) data.append("file", formData.file);
 
-      const res = await api.post("/send", data, {
+      const res = await api.post("/send-cv", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (res.data.success) {
         setStatusMessage("✅ CV sent successfully!");
+
+        // Reset form
         setFormData({
           name: "",
           course: "",
           email: "",
           phone: "",
+          message: "",
           file: null,
         });
+
+        // Reset file input manually
+        if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
-        setStatusMessage("❌ Failed to send CV. Try again.");
+        setStatusMessage("❌ Failed to send CV. Please try again.");
       }
     } catch (error) {
       console.error(error);
@@ -75,7 +85,7 @@ export default function CareerCV() {
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
-          {/* Left Side */}
+          {/* LEFT CARD */}
           <div className="relative rounded-xl overflow-hidden min-h-[600px] flex">
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -91,20 +101,21 @@ export default function CareerCV() {
             </div>
           </div>
 
-          {/* Right Side - Form */}
+          {/* RIGHT FORM */}
           <div className="bg-white shadow-lg rounded-xl p-8 min-h-[600px] flex flex-col">
             <h3 className="text-2xl font-semibold mb-3 text-gray-800">
               Fill the form
             </h3>
             <p className="text-sm text-red-600 mb-6">
-              ⚠️ Please provide real information only — this will be used to
-              contact you later.
+              ⚠️ Please provide real information — this will be used to contact
+              you later.
             </p>
 
             <form
               onSubmit={handleSubmit}
               className="space-y-5 flex-1 flex flex-col"
             >
+              {/* NAME */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
                   Name
@@ -115,11 +126,12 @@ export default function CareerCV() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
                   placeholder="Enter your full name"
                 />
               </div>
 
+              {/* COURSE */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
                   Course Taken
@@ -128,18 +140,18 @@ export default function CareerCV() {
                   name="course"
                   value={formData.course}
                   onChange={handleChange}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-white"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
                 >
-                  <option value="">Select a course</option>
-                  {courseOptions.map((course, index) => (
-                    <option key={index} value={course}>
+                  <option value="">Select a course (optional)</option>
+                  {courseOptions.map((course, idx) => (
+                    <option key={idx} value={course}>
                       {course}
                     </option>
                   ))}
                 </select>
               </div>
 
+              {/* EMAIL */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
                   Email
@@ -150,11 +162,12 @@ export default function CareerCV() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                  placeholder="Enter your email address"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                  placeholder="Enter your email"
                 />
               </div>
 
+              {/* PHONE */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
                   Phone Number
@@ -165,12 +178,26 @@ export default function CareerCV() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
                   placeholder="Enter your phone number"
                 />
               </div>
 
-              {/* File Upload */}
+              {/* MESSAGE FIELD (NEW) */}
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">
+                  Message / Description
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Describe about your current situation, skills, or qualifications"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 h-28 resize-none"
+                ></textarea>
+              </div>
+
+              {/* FILE UPLOAD */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
                   Upload CV
@@ -178,9 +205,10 @@ export default function CareerCV() {
                 <input
                   type="file"
                   name="file"
+                  ref={fileInputRef}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer transition"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 file:bg-red-600 file:text-white"
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 />
                 {formData.file && (
@@ -190,10 +218,11 @@ export default function CareerCV() {
                 )}
               </div>
 
+              {/* SUBMIT BUTTON */}
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-4 rounded-lg font-semibold text-lg transition duration-300 transform hover:scale-105 mt-auto ${
+                className={`w-full py-4 rounded-lg font-semibold text-lg ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-red-600 hover:bg-red-700 text-white"
@@ -201,11 +230,13 @@ export default function CareerCV() {
               >
                 {loading ? "Sending..." : "Submit CV"}
               </button>
-            </form>
 
-            {statusMessage && (
-              <p className="text-center mt-4 text-sm">{statusMessage}</p>
-            )}
+              {statusMessage && (
+                <p className="text-center mt-4 text-sm text-gray-700">
+                  {statusMessage}
+                </p>
+              )}
+            </form>
           </div>
         </div>
       </div>

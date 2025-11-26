@@ -9,108 +9,157 @@ export default function Questionss() {
   const faqs = [
     {
       number: "01",
-      question: "Which countries can KBM help me apply to?",
-      subtitle: "Study abroad options",
+      question: "What does a casino dealer actually do?",
+      subtitle: "Role & Duties",
       answer:
-        "KBM Education Consultancy provides guidance for students and professionals who want to study or work in Japan, USA, Australia, UK, Canada, and other countries.",
+        "A casino dealer operates the game—handling cards, chips, bets, payouts, and ensuring the game runs smoothly while maintaining professionalism at the table.",
     },
     {
       number: "02",
-      question: "What visa types does KBM assist with?",
-      subtitle: "Visa guidance",
+      question: "Do dealers gamble or use their own money?",
+      subtitle: "Common concern",
       answer:
-        "We assist with student visas, SSW, TITP, work permits, and other relevant visa categories depending on the destination country.",
+        "No. Dealers never gamble or use their own money. They only manage the game for players.",
     },
     {
       number: "03",
-      question: "How long does the application process take?",
-      subtitle: "Timeline info",
+      question: "Do I need prior casino knowledge or experience?",
+      subtitle: "Eligibility",
       answer:
-        "The timeline depends on the country, visa type, and completeness of documents, but our team ensures you stay on track every step of the way.",
+        "No experience is required. We train students from zero, even if they have never been inside a casino before.",
     },
     {
       number: "04",
-      question: "Do you provide pre-departure training?",
-      subtitle: "Preparation support",
+      question: "Is this job suitable for women?",
+      subtitle: "Female applicants",
       answer:
-        "Yes! KBM provides comprehensive pre-departure sessions, including cultural adaptation, communication tips, and career guidance.",
+        "Yes! Female dealers are highly sought after in the gaming industry and have excellent career prospects.",
     },
     {
       number: "05",
-      question: "Is the consultancy only for students?",
-      subtitle: "Eligibility",
+      question: "How long is the training period?",
+      subtitle: "Training duration",
       answer:
-        "No, we also support working professionals seeking international career opportunities and specialized visa programs.",
+        "Basic training usually lasts 2–4 weeks, while professional-level training may take 1–2 months depending on skills and game types.",
     },
     {
       number: "06",
-      question: "Can you help with university selection?",
-      subtitle: "University guidance",
+      question: "What games will I learn during training?",
+      subtitle: "Game knowledge",
       answer:
-        "Absolutely! We help students choose universities and programs that match their academic background, career goals, and budget.",
+        "Students are trained in Roulette, Blackjack, Baccarat, 3 Card Poker, Flush, Poker, and other major casino table games.",
     },
     {
       number: "07",
-      question: "Do you provide document verification?",
-      subtitle: "Document assistance",
+      question: "What skills are required to become a dealer?",
+      subtitle: "Skill requirements",
       answer:
-        "Yes, our team reviews and verifies all required documents to reduce chances of visa rejection or application delays.",
+        "Basic math, communication skills, confidence, discipline, and presentability are key requirements.",
     },
     {
       number: "08",
-      question: "What is the cost of your services?",
-      subtitle: "Fees and charges",
+      question: "Do dealers need to be good at math?",
+      subtitle: "Math requirement",
       answer:
-        "KBM Education Consultancy offers transparent pricing. Costs vary depending on the country, visa type, and level of service required.",
+        "Only basic arithmetic is needed. Complex calculations are not required.",
     },
     {
       number: "09",
-      question: "Do you offer online consultations?",
-      subtitle: "Remote support",
+      question: "Do dealers handle real cash?",
+      subtitle: "Money handling",
       answer:
-        "Yes, we provide consultations via Zoom or other platforms for students who cannot visit our office in person.",
+        "Dealers work with gaming chips at the table. Cash transactions are handled at the cashier counter.",
     },
     {
       number: "10",
-      question: "Can I track my application progress?",
-      subtitle: "Application tracking",
+      question: "Where can I find a job after completing training?",
+      subtitle: "Job placement",
       answer:
-        "We provide regular updates and a dedicated point of contact to ensure you know exactly where your application stands.",
+        "Job opportunities are available in Nepal, India, and various international destinations depending on eligibility and casino requirements.",
     },
     {
       number: "11",
-      question: "Do you help with scholarships?",
-      subtitle: "Financial aid guidance",
+      question: "What documents are required for enrollment?",
+      subtitle: "Required documents",
       answer:
-        "Yes! KBM provides guidance on scholarship opportunities, eligibility, and application strategies to reduce financial burden.",
+        "Applicants typically need a CV, citizenship or passport, academic certificates, and a police clearance certificate.",
     },
     {
       number: "12",
-      question: "What if my visa is rejected?",
-      subtitle: "Visa support",
+      question: "How much salary can I expect as a beginner?",
+      subtitle: "Salary expectations",
       answer:
-        "We review rejected applications, provide feedback, and help you reapply with stronger documentation and guidance.",
+        "Salary varies by country and casino. Dealers earn a base salary plus tips or service charges depending on the workplace.",
     },
     {
       number: "13",
-      question: "Do you offer career counseling?",
-      subtitle: "Career support",
+      question: "Is there career growth in casino dealing?",
+      subtitle: "Career path",
       answer:
-        "Yes, our team provides career advice to help students and professionals align their international studies with future job opportunities.",
+        "Yes. You can grow from dealer to senior dealer, inspector, pit boss, supervisor, gaming manager, or even trainer.",
     },
     {
       number: "14",
-      question: "Are your services personalized?",
-      subtitle: "Tailored guidance",
+      question: "Is casino work legal and safe?",
+      subtitle: "Safety & legality",
       answer:
-        "Every student receives personalized support based on their goals, background, and the specific country they are targeting.",
+        "Yes, we work only with licensed and regulated casinos to ensure a safe and legal work environment.",
     },
     {
       number: "15",
-      question: "How do I start my application with KBM?",
-      subtitle: "Getting started",
+      question: "Will I be trained in communication and etiquette?",
+      subtitle: "Soft skills training",
       answer:
-        "You can reach out via our website, email, or visit our office. Our team will schedule a consultation and guide you through the first steps.",
+        "Yes. We provide grooming, communication, customer handling, and table etiquette training as part of the program.",
+    },
+    {
+      number: "16",
+      question: "I’m shy or introverted. Is this a problem?",
+      subtitle: "Personality concerns",
+      answer:
+        "Not at all. Many trainees start shy—confidence naturally improves through practice and hands-on training.",
+    },
+    {
+      number: "17",
+      question: "Is English required for this job?",
+      subtitle: "Language requirement",
+      answer:
+        "Basic conversational English helps, but it is not compulsory for every casino or job location.",
+    },
+    {
+      number: "18",
+      question: "Do I need a uniform or special equipment?",
+      subtitle: "Uniform details",
+      answer:
+        "No. Casinos generally provide uniforms and the necessary accessories.",
+    },
+    {
+      number: "19",
+      question: "What is the age limit for becoming a dealer?",
+      subtitle: "Age eligibility",
+      answer:
+        "Most casinos accept applicants between 18 and 35 years old, depending on country rules.",
+    },
+    {
+      number: "20",
+      question: "Do you guarantee job placement?",
+      subtitle: "Placement guarantee",
+      answer:
+        "We cannot legally guarantee jobs, but our placement rate is extremely high for committed and disciplined trainees.",
+    },
+    {
+      number: "21",
+      question: "What makes your casino training institute different?",
+      subtitle: "Why choose us?",
+      answer:
+        "We offer hands-on training, real-table simulation, expert instructors, strong casino connections, and personalized career guidance.",
+    },
+    {
+      number: "22",
+      question: "How do I enroll in the training program?",
+      subtitle: "Enrollment process",
+      answer:
+        "Simply contact us—our team will guide you through admission, training, and placement step by step.",
     },
   ];
 
@@ -126,14 +175,14 @@ export default function Questionss() {
           <div className="max-w-md p-4 md:p-8 text-center lg:text-left">
             <div className="relative">
               <div className="relative z-10">
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
-                  See Answer to Your Queries
+                <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
+                  Find Answers to Your Casino Training Questions
                 </h1>
                 <p className="text-gray-600 text-base md:text-lg">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam
-                  incidunt, culpa, corrupti neque, nisi quidem atque consectetur
-                  quo eveniet sit aut soluta cumque reprehenderit dolore
-                  ratione.
+                  Get clear and reliable information about casino dealer
+                  training, job placement, requirements, salary, and career
+                  growth. Everything you need to know is answered here in simple
+                  detail.
                 </p>
               </div>
             </div>

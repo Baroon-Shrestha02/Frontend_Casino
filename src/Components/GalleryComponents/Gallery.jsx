@@ -146,16 +146,6 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* Floating Add Image Button (ADMIN ONLY) */}
-      {isAdmin && (
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-xl z-99"
-        >
-          <Plus size={24} />
-        </button>
-      )}
-
       {/* FULLSCREEN MODAL */}
       {isModalOpen && selectedIndex !== null && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
