@@ -1,83 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronDown, Search } from "lucide-react";
-
-import blogData from "./blogData";
 import BlogCard from "./BlogCard";
+import api from "../../Utils/api";
+import { FaPlus } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../Redux/Slices/UserSlice";
 
 export default function AllBlogs() {
-  const categories = [
-    "All",
-    "Law enforcement",
-    "PII",
-    "Audio",
-    "Healthcare",
-    "Data Privacy",
-    "OCR",
-    "Digital Evidence",
-    "Artificial Intelligence",
-  ];
-
+  const [categories, setCategories] = useState(["All"]);
+  const [blogs, setBlogs] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const user = useSelector(selectUser);
   const itemsPerPage = 6;
 
-  // -----------------------------
-  // ⭐ FILTER BLOGS
-  // -----------------------------
-  const filteredBlogs = blogData.filter((blog) => {
-    const matchCategory =
-      selectedCategory === "All" ||
-      blog.tags.some((tag) => tag === selectedCategory);
+  const admin = user?.role;
 
-    const matchSearch =
-      blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      blog.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      blog.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  // ------------------------------------------------
+  // 🔥 Fetch categories dynamically
+  // ------------------------------------------------
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get("/blogs-categories");
+      const apiCategories = res.data?.categories || [];
+      setCategories(["All", ...apiCategories]);
+    } catch (error) {
+      console.error("Failed to load categories:", error);
+    }
+  };
 
-    return matchCategory && matchSearch;
-  });
+  // ------------------------------------------------
+  // 🔥 Fetch blogs from backend
+  // ------------------------------------------------
+  const fetchBlogs = async () => {
+    try {
+      const params = {};
+      if (selectedCategory !== "All") params.category = selectedCategory;
+      if (searchQuery.trim() !== "") params.search = searchQuery;
+
+      const res = await api.get("/blogs", { params });
+      setBlogs(res.data.blogs || []);
+    } catch (error) {
+      console.error("Failed to load blogs:", error);
+    }
+  };
+
+  // ------------------------------------------------
+  // 🔥 Handle blog updates (e.g. featured toggle)
+  // ------------------------------------------------
+  const handleUpdate = (id, updates) => {
+    setBlogs((prevBlogs) =>
+      prevBlogs.map((blog) =>
+        (blog._id || blog.id) === id ? { ...blog, ...updates } : blog
+      )
+    );
+  };
+
+  // ------------------------------------------------
+  // 🔥 Handle blog deletion
+  // ------------------------------------------------
+  const handleDelete = (id) => {
+    setBlogs((prevBlogs) =>
+      prevBlogs.filter((blog) => (blog._id || blog.id) !== id)
+    );
+  };
+
+  // Load categories once
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Load blogs when filters change
+  useEffect(() => {
+    fetchBlogs();
+    setCurrentPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, searchQuery]);
 
   // -----------------------------
-  // ⭐ PAGINATION BASED ON FILTERED BLOGS
+  // ⭐ PAGINATION
   // -----------------------------
-  const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage);
-
+  const totalPages = Math.ceil(blogs.length / itemsPerPage);
   const indexOfLastBlog = currentPage * itemsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - itemsPerPage;
-
-  const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const nextPage = () => {
-    if (currentPage < totalPages) handlePageChange(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) handlePageChange(currentPage - 1);
-  };
-
-  // Reset to page 1 when search or category changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedCategory]);
-
   return (
     <section className="container mx-auto px-4">
       <hr />
-
       {/* Search + Title */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between py-8 gap-4">
         <div className="text-xl md:text-2xl font-semibold">
-          Browse by categories
+          Browse by Categories
         </div>
 
         <div className="relative w-full md:w-auto">
@@ -94,25 +116,35 @@ export default function AllBlogs() {
 
       {/* Categories */}
       <div className="mb-8">
-        {/* Desktop */}
+        {/* Desktop Scrollable */}
         <div className="hidden md:block">
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors
-                  ${
-                    selectedCategory === cat
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
+                  selectedCategory === cat
+                    ? "bg-primary text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
                 {cat}
               </button>
             ))}
           </div>
         </div>
+
+        {admin && (
+          <Link to="/blog-form">
+            <button className="flex items-center gap-x-2 py-2 px-4 bg-primary text-white rounded-xl mt-4">
+              <div>
+                <FaPlus />
+              </div>
+              <div>Add Blog</div>
+            </button>
+          </Link>
+        )}
 
         {/* Mobile Dropdown */}
         <div className="md:hidden">
@@ -137,12 +169,11 @@ export default function AllBlogs() {
                     setSelectedCategory(cat);
                     setIsDropdownOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-colors
-                    ${
-                      selectedCategory === cat
-                        ? "bg-green-50 text-green-600 font-medium"
-                        : "text-gray-700"
-                    }`}
+                  className={`w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
+                    selectedCategory === cat
+                      ? "bg-green-50 text-green-600 font-medium"
+                      : "text-gray-700"
+                  }`}
                 >
                   {cat}
                 </button>
@@ -152,13 +183,17 @@ export default function AllBlogs() {
         </div>
       </div>
 
-      {/* Blog Cards */}
-      <BlogCard items={currentBlogs} />
+      {/* Blog Cards with Admin Controls */}
+      <BlogCard
+        items={currentBlogs}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
 
       {/* Pagination */}
       <div className="flex items-center justify-center gap-4 my-10">
         <button
-          onClick={prevPage}
+          onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={`px-4 py-2 rounded-lg border ${
             currentPage === 1
@@ -174,7 +209,7 @@ export default function AllBlogs() {
         </span>
 
         <button
-          onClick={nextPage}
+          onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages || totalPages === 0}
           className={`px-4 py-2 rounded-lg border ${
             currentPage === totalPages || totalPages === 0

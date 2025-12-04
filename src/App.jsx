@@ -22,11 +22,14 @@ import ScrollToTop from "./Components/HelperComponents/ScrollToTop";
 import BlogsPage from "./Pages/BlogsPage";
 import FAQPages from "./Pages/FAQPages";
 import TestimonialsPage from "./Pages/TestimonialsPage";
-
 import CareerDescription from "./Components/CareerComponents/CareerDescription";
-
 import AddCareerForm from "./Components/CareerComponents/AddCareerForm";
 import Login from "./Components/AuthComponents/Login";
+import BlogForm from "./Components/BlogsComponents/BlogForm";
+import EditBlogForm from "./Components/BlogsComponents/EditBlogForm";
+import BlogDescription from "./Components/BlogsComponents/BlogDescription";
+import AdminOnlyRoutes from "./Routes/AdminOnlyRoutes";
+import ProtectedRoutes from "./Routes/ProtectedRoutes";
 
 function App() {
   return (
@@ -53,9 +56,38 @@ function App() {
         <Route path="/faq" element={<FAQPages />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/add-post" element={<AddCareerForm />} />
 
-        <Route path="/careers/:id" element={<CareerDescription />} />
+        {/* Admin Only Routes */}
+        <Route
+          path="/add-post"
+          element={
+            <AdminOnlyRoutes>
+              <AddCareerForm />
+            </AdminOnlyRoutes>
+          }
+        />
+        <Route
+          path="/blog-form"
+          element={
+            <AdminOnlyRoutes>
+              <BlogForm />
+            </AdminOnlyRoutes>
+          }
+        />
+        <Route
+          path="/edit-blog/:slug"
+          element={
+            <AdminOnlyRoutes>
+              <EditBlogForm />
+            </AdminOnlyRoutes>
+          }
+        />
+
+        {/* Protected Routes with Slugs */}
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/careers/:id" element={<CareerDescription />} />
+          <Route path="/blogs/:slug" element={<BlogDescription />} />
+        </Route>
 
         {/* <Route path="/services" element={<ServicePage />} /> */}
       </Routes>

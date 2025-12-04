@@ -11,6 +11,7 @@ import {
   signOutSuccess,
   selectUser,
 } from "../../Redux/Slices/UserSlice";
+import { Spade } from "lucide-react";
 
 function Login() {
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ function Login() {
   return (
     <div className="min-h-[60vh] flex container mx-auto my-12 ">
       {/* Left Side - Content */}
-      <div className="hidden lg:flex lg:w-1/2 bg-linear-to-br from-blue-600 via-indigo-600 to-purple-700 p-12 flex-col justify-center relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-12 flex-col justify-center relative overflow-hidden">
         {/* Decorative circles */}
         <div className="absolute top-20 left-20 w-72 h-72 bg-white opacity-10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-300 opacity-10 rounded-full blur-3xl"></div>
@@ -78,23 +79,11 @@ function Login() {
           {!user ? (
             <>
               <div className="mb-8">
-                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-                  <svg
-                    className="w-8 h-8 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
+                <div className="w-20 h-20 bg-whte bg-opacity-20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
+                  <img src="uploads/main/logo2.png" alt="" />
                 </div>
                 <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                  Welcome to Admin Dashboard
+                  Welcome to Casino Training Nepal
                 </h1>
                 <p className="text-xl text-blue-100 mb-8 leading-relaxed">
                   Manage your application with ease. Access powerful tools and

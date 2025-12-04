@@ -10,7 +10,7 @@ export default function CareerCV() {
     email: "",
     phone: "",
     message: "",
-    file: null,
+    files: null,
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,9 +37,9 @@ export default function CareerCV() {
       data.append("phone", formData.phone);
       data.append("message", formData.message || "Not Provided");
 
-      if (formData.file) data.append("file", formData.file);
+      if (formData.files) data.append("files", formData.files);
 
-      const res = await api.post("/send-cv", data, {
+      const res = await api.post("/send-mail", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -52,7 +52,7 @@ export default function CareerCV() {
           email: "",
           phone: "",
           message: "",
-          file: null,
+          files: null,
         });
 
         if (fileInputRef.current) fileInputRef.current.value = "";
@@ -202,16 +202,16 @@ export default function CareerCV() {
                 </label>
                 <input
                   type="file"
-                  name="file"
+                  name="files"
                   ref={fileInputRef}
                   onChange={handleChange}
                   required
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 file:bg-red-600 file:text-white"
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 />
-                {formData.file && (
+                {formData.files && (
                   <p className="text-sm text-gray-600 mt-2">
-                    📄 Selected: {formData.file.name}
+                    📄 Selected: {formData.files.name}
                   </p>
                 )}
               </div>
