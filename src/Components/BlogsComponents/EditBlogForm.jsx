@@ -517,7 +517,7 @@ export default function EditBlogForm() {
               Blog Content <span className="text-red-500">*</span>
             </label>
             <Editor
-              apiKey="ydtp0lw09fpf7s9xyyrq1mykcs7go1xp994sjtypxghsx8d9"
+              apiKey="cwz1j236z0bufuse546551xtigm4huwggkfm2ogopjc0rskh"
               value={formData.description}
               init={{
                 height: 500,
