@@ -81,13 +81,23 @@ export default function Tests() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 },
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
+      },
     },
   };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
@@ -110,6 +120,7 @@ export default function Tests() {
           variants={container}
           initial="hidden"
           animate="show"
+          key="testimonials-grid"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {testimonials.map((testimonial, index) => (
@@ -144,7 +155,7 @@ export default function Tests() {
                   <motion.img
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     transition={{ type: "spring", stiffness: 300 }}
-                    src={testimonial.profImg?.[0]?.url}
+                    src={testimonial.profImg[0]?.url}
                     alt={testimonial.name}
                     className="w-14 h-14 rounded-full mr-4 border-2 border-gray-600 transition-colors"
                   />

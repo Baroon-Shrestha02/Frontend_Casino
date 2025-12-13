@@ -30,6 +30,8 @@ import EditBlogForm from "./Components/BlogsComponents/EditBlogForm";
 import BlogDescription from "./Components/BlogsComponents/BlogDescription";
 import AdminOnlyRoutes from "./Routes/AdminOnlyRoutes";
 import ProtectedRoutes from "./Routes/ProtectedRoutes";
+import WorkforcePage from "./Pages/WorkforcePage";
+import SuccessPage from "./Pages/SuccessPage";
 
 function App() {
   return (
@@ -56,6 +58,8 @@ function App() {
         <Route path="/faq" element={<FAQPages />} />
         <Route path="/testimonials" element={<TestimonialsPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/workforce" element={<WorkforcePage />} />
+        <Route path="/success-stories" element={<SuccessPage />} />
 
         {/* Admin Only Routes */}
         <Route

@@ -1,285 +1,79 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { Trash2, X } from "lucide-react";
+import api from "../../Utils/api";
+import SuccessStoriesForm from "../Forms/SuccessStoriesForm";
+import { selectUser } from "../../Redux/Slices/UserSlice";
+import { useSelector } from "react-redux";
 
 export default function SuccessStories() {
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(8);
   const [isLoading, setIsLoading] = useState(false);
   const [successStories, setSuccessStories] = useState([]);
+  const [totalStories, setTotalStories] = useState(0);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const user = useSelector(selectUser);
+  const admin = user?.role;
 
   // Initial data load
   useEffect(() => {
-    loadSuccessStories(6);
+    loadSuccessStories(8);
   }, []);
 
-  // Simulated API call - Replace with actual backend endpoint
+  // Real API call
   const loadSuccessStories = async (count) => {
     setIsLoading(true);
-
-    // COMMENTED OUT: Real API call
-    // try {
-    //   const response = await fetch(`/api/success-stories?limit=${count}`);
-    //   const data = await response.json();
-    //   setSuccessStories(data);
-    // } catch (error) {
-    //   console.error('Error fetching success stories:', error);
-    // } finally {
-    //   setIsLoading(false);
-    // }
-
-    // Simulated delay for demo
-    setTimeout(() => {
-      const mockData = [
-        {
-          id: 1,
-          name: "Priya Sharma",
-          company: "Google",
-          role: "Software Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
-          posterImage:
-            "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop",
-        },
-        {
-          id: 2,
-          name: "Rahul Verma",
-          company: "Microsoft",
-          role: "Product Manager",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rahul",
-          posterImage:
-            "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=400&fit=crop",
-        },
-        {
-          id: 3,
-          name: "Anjali Gupta",
-          company: "Amazon",
-          role: "Data Scientist",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Anjali",
-          posterImage:
-            "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=400&fit=crop",
-        },
-        {
-          id: 4,
-          name: "Arjun Patel",
-          company: "Meta",
-          role: "Full Stack Developer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Arjun",
-          posterImage:
-            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
-        },
-        {
-          id: 5,
-          name: "Sneha Reddy",
-          company: "Apple",
-          role: "iOS Developer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sneha",
-          posterImage:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=400&fit=crop",
-        },
-        {
-          id: 6,
-          name: "Vikram Singh",
-          company: "Tesla",
-          role: "Embedded Systems Engineer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram",
-          posterImage:
-            "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=400&fit=crop",
-        },
-        {
-          id: 7,
-          name: "Meera Nair",
-          company: "Netflix",
-          role: "Backend Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Meera",
-          posterImage:
-            "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&h=400&fit=crop",
-        },
-        {
-          id: 8,
-          name: "Aditya Joshi",
-          company: "Spotify",
-          role: "Frontend Developer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Aditya",
-          posterImage:
-            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&h=400&fit=crop",
-        },
-        {
-          id: 9,
-          name: "Kavya Iyer",
-          company: "Adobe",
-          role: "UX Designer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kavya",
-          posterImage:
-            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=400&fit=crop",
-        },
-        {
-          id: 10,
-          name: "Rohan Desai",
-          company: "LinkedIn",
-          role: "DevOps Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rohan",
-          posterImage:
-            "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=400&fit=crop",
-        },
-        {
-          id: 11,
-          name: "Ishita Malhotra",
-          company: "Salesforce",
-          role: "Cloud Architect",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Ishita",
-          posterImage:
-            "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&h=400&fit=crop",
-        },
-        {
-          id: 12,
-          name: "Karthik Menon",
-          company: "IBM",
-          role: "AI Engineer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Karthik",
-          posterImage:
-            "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&h=400&fit=crop",
-        },
-        {
-          id: 13,
-          name: "Divya Kapoor",
-          company: "Oracle",
-          role: "Database Administrator",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Divya",
-          posterImage:
-            "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&h=400&fit=crop",
-        },
-        {
-          id: 14,
-          name: "Siddharth Rao",
-          company: "Uber",
-          role: "Mobile Developer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Siddharth",
-          posterImage:
-            "https://images.unsplash.com/photo-1557862921-37829c790f19?w=600&h=400&fit=crop",
-        },
-        {
-          id: 15,
-          name: "Nisha Agarwal",
-          company: "Twitter",
-          role: "Security Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nisha",
-          posterImage:
-            "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&h=400&fit=crop",
-        },
-        {
-          id: 16,
-          name: "Harsh Mehta",
-          company: "Airbnb",
-          role: "Product Designer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Harsh",
-          posterImage:
-            "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&h=400&fit=crop",
-        },
-        {
-          id: 17,
-          name: "Pooja Pillai",
-          company: "PayPal",
-          role: "Backend Developer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pooja",
-          posterImage:
-            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&h=400&fit=crop",
-        },
-        {
-          id: 18,
-          name: "Nikhil Bansal",
-          company: "Slack",
-          role: "Platform Engineer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Nikhil",
-          posterImage:
-            "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=600&h=400&fit=crop",
-        },
-        {
-          id: 19,
-          name: "Riya Chatterjee",
-          company: "Stripe",
-          role: "Financial Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Riya",
-          posterImage:
-            "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=600&h=400&fit=crop",
-        },
-        {
-          id: 20,
-          name: "Abhishek Kumar",
-          company: "Zoom",
-          role: "Video Engineer",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Abhishek",
-          posterImage:
-            "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=600&h=400&fit=crop",
-        },
-        {
-          id: 21,
-          name: "Tanvi Shah",
-          company: "Shopify",
-          role: "E-commerce Developer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Tanvi",
-          posterImage:
-            "https://images.unsplash.com/photo-1598550874175-4d0ef436c909?w=600&h=400&fit=crop",
-        },
-        {
-          id: 22,
-          name: "Varun Bhatt",
-          company: "Dropbox",
-          role: "Storage Engineer",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Varun",
-          posterImage:
-            "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=600&h=400&fit=crop",
-        },
-        {
-          id: 23,
-          name: "Simran Kaur",
-          company: "GitHub",
-          role: "Developer Advocate",
-          profileImage:
-            "https://api.dicebear.com/7.x/avataaars/svg?seed=Simran",
-          posterImage:
-            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=400&fit=crop",
-        },
-        {
-          id: 24,
-          name: "Akash Trivedi",
-          company: "Atlassian",
-          role: "Agile Coach",
-          profileImage: "https://api.dicebear.com/7.x/avataaars/svg?seed=Akash",
-          posterImage:
-            "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?w=600&h=400&fit=crop",
-        },
-      ];
-
-      setSuccessStories(mockData.slice(0, count));
+    try {
+      const response = await api.get(`/success-stories`, {
+        params: { limit: count },
+      });
+      setSuccessStories(response.data.data);
+      setTotalStories(response.data.total);
+    } catch (error) {
+      console.error("Error fetching success stories:", error);
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const handleLoadMore = () => {
-    const newCount = visibleCount + 6;
+    const newCount = visibleCount + 8;
     setVisibleCount(newCount);
     loadSuccessStories(newCount);
+  };
 
-    // COMMENTED OUT: Real API call for load more
-    // const loadMore = async () => {
-    //   setIsLoading(true);
-    //   try {
-    //     const response = await fetch(`/api/success-stories?limit=6&offset=${visibleCount}`);
-    //     const data = await response.json();
-    //     setSuccessStories(prev => [...prev, ...data]);
-    //   } catch (error) {
-    //     console.error('Error loading more success stories:', error);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-    // loadMore();
+  const handleDeleteClick = (story) => {
+    setDeleteConfirm(story);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deleteConfirm) return;
+
+    setIsDeleting(true);
+    try {
+      await api.delete(`/success-stories/delete/${deleteConfirm._id}`, {
+        withCredentials: true,
+      });
+
+      setSuccessStories((prev) =>
+        prev.filter((s) => s._id !== deleteConfirm._id)
+      );
+      setTotalStories((prev) => prev - 1);
+
+      // Close dialog
+      setDeleteConfirm(null);
+    } catch (error) {
+      console.error("Error deleting success story:", error);
+      alert("Failed to delete success story. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirm(null);
   };
 
   const container = {
@@ -288,13 +82,21 @@ export default function SuccessStories() {
       opacity: 1,
       transition: {
         staggerChildren: 0.08,
+        delayChildren: 0.1,
       },
     },
   };
 
   const item = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
   };
 
   return (
@@ -311,16 +113,16 @@ export default function SuccessStories() {
           Meet the achievers who landed their dream jobs
         </p>
       </motion.div>
-
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
+        key={`success-stories-grid-${successStories.length}`}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
       >
         {successStories.map((story, index) => (
           <motion.div
-            key={`${story.id}-${index}`}
+            key={`${story._id || story.id}-${index}`}
             variants={item}
             whileHover={{ y: -12, scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -331,7 +133,7 @@ export default function SuccessStories() {
               <motion.img
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.4 }}
-                src={story.posterImage}
+                src={story.posterImage?.[0]?.url || story.posterImage}
                 alt={`${story.name} success story`}
                 className="w-full h-full object-cover"
               />
@@ -375,9 +177,9 @@ export default function SuccessStories() {
               <motion.img
                 whileHover={{ scale: 1.15, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 400 }}
-                src={story.profileImage}
+                src={story.profileImage?.[0]?.url || story.profileImage}
                 alt={story.name}
-                className="w-12 h-12 rounded-full border-3 border-white shadow-md flex-shrink-0 ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all"
+                className="w-12 h-12 rounded-full border-3 border-white shadow-md flex-shrink-0 ring-2 ring-gray-200 group-hover:ring-blue-400 transition-all object-cover aspect-square"
               />
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors text-base">
@@ -406,12 +208,27 @@ export default function SuccessStories() {
 
             {/* Decorative corner */}
             <div className="absolute bottom-0 right-0 w-16 h-16 bg-gradient-to-tl from-blue-100/50 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+            {/* Admin Delete Button */}
+            {admin === "admin" && (
+              <div className="absolute bg-gradient-to-t from-white/30 to-white bottom-0 left-0 right-0 p-2 z-49 flex justify-center rounded-b-2xl">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleDeleteClick(story)}
+                  className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg shadow-lg hover:bg-red-700 transition-colors z-10"
+                  title="Delete success story"
+                >
+                  <Trash2 className="w-4 h-4 inline-block mr-1" />
+                  Delete
+                </motion.button>
+              </div>
+            )}
           </motion.div>
         ))}
       </motion.div>
-
       {/* Load More Button */}
-      {successStories.length < 24 && (
+      {successStories.length < totalStories && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -453,7 +270,6 @@ export default function SuccessStories() {
           </motion.button>
         </motion.div>
       )}
-
       {/* Showing count indicator */}
       <motion.p
         initial={{ opacity: 0 }}
@@ -461,8 +277,101 @@ export default function SuccessStories() {
         transition={{ delay: 0.6 }}
         className="text-center text-gray-500 mt-6 text-sm"
       >
-        Showing {successStories.length} of 24 success stories
+        Showing {successStories.length} of {totalStories} success stories
       </motion.p>
+
+      {admin === "admin" && <SuccessStoriesForm />}
+
+      {/* Delete Confirmation Dialog */}
+      <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={handleDeleteCancel}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
+            >
+              {/* Close button */}
+              <button
+                onClick={handleDeleteCancel}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                  <Trash2 className="w-8 h-8 text-red-600" />
+                </div>
+              </div>
+
+              {/* Content */}
+              <h3 className="text-2xl font-bold text-center text-gray-800 mb-2">
+                Delete Success Story?
+              </h3>
+              <p className="text-center text-gray-600 mb-6">
+                Are you sure you want to delete the success story from{" "}
+                <span className="font-semibold">{deleteConfirm.name}</span>?
+                This action cannot be undone.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleDeleteCancel}
+                  disabled={isDeleting}
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Cancel
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleDeleteConfirm}
+                  disabled={isDeleting}
+                  className="flex-1 px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isDeleting ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <span>Delete</span>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

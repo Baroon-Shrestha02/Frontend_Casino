@@ -1,12 +1,12 @@
 import React from "react";
-import HeroSection from "../HelperComponents/HeroSection";
+import HeroSection from "../../HelperComponents/HeroSection";
 
-export default function TestHero() {
+export default function SuccessHero() {
   return (
     <div>
       <HeroSection
-        title="Testimonials From Students"
-        subtitle="Hear from Our Graduates"
+        title="Success Stories"
+        subtitle="See from Our Students Succeed"
         description="Discover how our students turned their passion into successful casino careers."
         image="uploads/about/hero.jpg"
       />

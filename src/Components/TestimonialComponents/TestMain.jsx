@@ -10,8 +10,7 @@ export default function TestMain() {
     <div>
       <TestHero />
       <CombineTests />
-
-      <TestCTA />
+      {/* <Tests /> */}
     </div>
   );
 }

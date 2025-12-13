@@ -9,15 +9,12 @@ export default function CombineTests() {
   const slideVariants = {
     enter: (direction) => ({
       x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
     }),
     center: {
       x: 0,
-      opacity: 1,
     },
     exit: (direction) => ({
       x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
     }),
   };
 
@@ -98,12 +95,11 @@ export default function CombineTests() {
             exit="exit"
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 },
             }}
           >
-            <div className="p-8">
-              {activeTab === "tests" && <Tests />}
-              {activeTab === "successStories" && <SuccessStories />}
+            <div className="p-8" key={activeTab}>
+              {activeTab === "tests" && <Tests key="tests-component" />}
+              {activeTab === "successStories" && <SuccessStories key="success-stories-component" />}
             </div>
           </motion.div>
         </AnimatePresence>

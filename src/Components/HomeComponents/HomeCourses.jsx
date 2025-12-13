@@ -281,15 +281,12 @@ const HomeCourses = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <a href="/courses">
-          <motion.button
-            className="flex items-center gap-3 justify-between text-white hover:text-amber-500 transition-colors duration-300 group"
-            whileHover={{ x: 5 }}
-          >
-            <span className="text-lg md:text-xl">View All Courses</span>
-            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform duration-300" />
-          </motion.button>
-        </a>
+        <motion.button
+          className="flex items-center gap-3 justify-between text-white hover:text-amber-500 transition-colors duration-300 group"
+          whileHover={{ x: 5 }}
+        >
+          <span className="text-lg">Click on the card to view details</span>
+        </motion.button>
       </motion.div>
     </div>
   );
