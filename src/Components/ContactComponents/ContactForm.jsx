@@ -1,72 +1,90 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef } from "react";
 import api from "../../Utils/api";
 
 export default function ContactForm() {
+  const fileInputRef = useRef(null);
+
   const [formData, setFormData] = useState({
     name: "",
     course: "",
     email: "",
     phone: "",
-    description: "",
-    file: null, // optional
+    message: "",
+    files: null,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // For phone field, only allow digits and limit to 10 digits
+    if (name === "phone") {
+      const digitsOnly = value.replace(/\D/g, ""); // Remove non-digits
+      if (digitsOnly.length <= 10) {
+        setFormData({
+          ...formData,
+          [name]: digitsOnly,
+        });
+      }
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
     });
   };
 
-  const handleRemoveFile = () => {
-    setFormData({
-      ...formData,
-      file: null,
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+
+    // Validate phone number
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 8 || phoneDigits.length > 10) {
+      setStatusMessage("❌ Phone number must be between 8 and 10 digits.");
+      return;
+    }
+
+    setLoading(true);
+    setStatusMessage(null);
 
     try {
       const data = new FormData();
       data.append("name", formData.name);
-      data.append("course", formData.course);
+      data.append("course", formData.course || "Not Taken");
       data.append("email", formData.email);
       data.append("phone", formData.phone);
-      data.append("description", formData.description);
-      if (formData.file) {
-        data.append("file", formData.file);
-      }
+      data.append("message", formData.message || "Not Provided");
 
-      // Replace with your backend endpoint
-      const response = await api.post("/contact", data, {
+      if (formData.files) data.append("files", formData.files);
+
+      const res = await api.post("/send-mail", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (response.data.success) {
-        alert("Form submitted successfully!");
+      if (res.data.success) {
+        setStatusMessage("✅ Form submitted successfully!");
+
         setFormData({
           name: "",
           course: "",
           email: "",
           phone: "",
-          description: "",
-          file: null,
+          message: "",
+          files: null,
         });
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
       } else {
-        alert("Failed to submit form. Please try again.");
+        setStatusMessage("❌ Failed to submit form. Please try again.");
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("An error occurred. Please try again.");
+      console.error(error);
+      setStatusMessage("⚠️ Error submitting form. Please try later.");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -98,17 +116,20 @@ export default function ContactForm() {
             <div className="relative z-10 flex flex-col justify-center items-center text-center p-8 text-white w-full">
               <h2 className="text-4xl font-bold mb-6">Submit Your Details</h2>
               <p className="text-lg leading-relaxed max-w-md">
-                Fill in your details and our team will connect with you for the
-                next steps.
+                Fill in your details and our team will connect with you soon.
               </p>
             </div>
           </div>
 
           {/* Right Side */}
           <div className="bg-white shadow-lg rounded-xl p-8 min-h-[600px] flex flex-col">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-800">
+            <h3 className="text-2xl font-semibold mb-3 text-gray-800">
               Fill the form
             </h3>
+            <p className="text-sm text-red-600 mb-6">
+              ⚠️ Please provide real information — this will be used to contact
+              you later.
+            </p>
 
             <form
               onSubmit={handleSubmit}
@@ -124,7 +145,7 @@ export default function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -137,12 +158,11 @@ export default function ContactForm() {
                   name="course"
                   value={formData.course}
                   onChange={handleChange}
-                  required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition bg-white"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
                 >
-                  <option value="">Select a course</option>
-                  {courseOptions.map((course, index) => (
-                    <option key={index} value={course}>
+                  <option value="">Select a course (optional)</option>
+                  {courseOptions.map((course, idx) => (
+                    <option key={idx} value={course}>
                       {course}
                     </option>
                   ))}
@@ -159,8 +179,8 @@ export default function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                  placeholder="Enter your email address"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                  placeholder="Enter your email"
                 />
               </div>
 
@@ -174,61 +194,72 @@ export default function ContactForm() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                  placeholder="Enter your phone number"
+                  minLength="8"
+                  maxLength="10"
+                  pattern="[0-9]{8,10}"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                  placeholder="Enter 8-10 digit phone number"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Must be 8-10 digits only
+                </p>
               </div>
 
-              {/* Description Section */}
+              {/* MESSAGE FIELD */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Description
+                  Message / Description
                 </label>
                 <textarea
-                  name="description"
-                  value={formData.description}
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
-                  required
-                  rows="4"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                  placeholder="Write a brief description..."
-                />
+                  placeholder="Describe about your current situation, skills, or qualifications"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 h-28 resize-none"
+                ></textarea>
               </div>
 
-              {/* Optional File Upload */}
+              {/* FILE UPLOAD */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Upload File (Optional)
+                  Upload File/CV
                 </label>
                 <input
                   type="file"
-                  name="file"
+                  name="files"
+                  ref={fileInputRef}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 file:bg-primary file:px-4 file:rounded-md file:text-white"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 />
-                {formData.file && (
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-sm text-gray-500">
-                      Selected: {formData.file.name}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={handleRemoveFile}
-                      className="text-red-500 text-sm hover:underline"
-                    >
-                      Remove
-                    </button>
-                  </div>
+                {formData.files && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    📄 Selected: {formData.files.name}
+                  </p>
                 )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Must Doc, Pdf or jpg only.
+                </p>
               </div>
 
+              {/* SUBMIT BUTTON */}
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full py-4 rounded-lg font-semibold text-lg transition duration-300 transform hover:scale-105 bg-primary text-white"
+                disabled={loading}
+                className={`w-full py-4 rounded-lg font-semibold text-lg ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-primary text-white"
+                }`}
               >
-                {isSubmitting ? "Submitting..." : "Submit Form"}
+                {loading ? "Submitting..." : "Submit Form"}
               </button>
+
+              {statusMessage && (
+                <p className="text-center mt-4 text-sm text-gray-700">
+                  {statusMessage}
+                </p>
+              )}
             </form>
           </div>
         </div>

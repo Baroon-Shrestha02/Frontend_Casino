@@ -94,7 +94,7 @@ export default function CareerHowWeHelp() {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <motion.div
+          {/* <motion.div
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
@@ -104,11 +104,11 @@ export default function CareerHowWeHelp() {
             <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
               Career Support Program
             </span>
-          </motion.div>
+          </motion.div> */}
 
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             How We Help You Get{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-primary bg-clip-text text-transparent">
               Hired
             </span>
           </h2>
@@ -216,7 +216,7 @@ export default function CareerHowWeHelp() {
               boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
             }}
             whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center justify-center px-10 py-5 rounded-2xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 text-white transition-all duration-200 shadow-xl hover:shadow-2xl group"
+            className="inline-flex items-center justify-center px-10 py-5 rounded-2xl font-semibold bg-primary text-white transition-all duration-200 shadow-xl hover:shadow-2xl group"
           >
             <span>Talk to a Career Advisor</span>
             <motion.span

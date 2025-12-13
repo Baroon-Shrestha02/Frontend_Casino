@@ -18,6 +18,19 @@ export default function CareerCV() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // For phone field, only allow digits and limit to 10 digits
+    if (name === "phone") {
+      const digitsOnly = value.replace(/\D/g, ""); // Remove non-digits
+      if (digitsOnly.length <= 10) {
+        setFormData({
+          ...formData,
+          [name]: digitsOnly,
+        });
+      }
+      return;
+    }
+
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
@@ -26,6 +39,14 @@ export default function CareerCV() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate phone number
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 8 || phoneDigits.length > 10) {
+      setStatusMessage("❌ Phone number must be between 8 and 10 digits.");
+      return;
+    }
+
     setLoading(true);
     setStatusMessage(null);
 
@@ -116,7 +137,7 @@ export default function CareerCV() {
               {/* NAME */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Name
+                  Name <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -124,7 +145,7 @@ export default function CareerCV() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                  className="w-full border border-gray-300 focus:border-primary focus:outline-none rounded-lg px-4 py-3"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -132,13 +153,13 @@ export default function CareerCV() {
               {/* COURSE */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Course Taken
+                  Course Taken <span className="text-red-600">*</span>
                 </label>
                 <select
                   name="course"
                   value={formData.course}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white"
+                  className="w-full border border-gray-300 rounded-lg focus:border-primary focus:outline-none  px-4 py-3 bg-white"
                 >
                   <option value="">Select a course (optional)</option>
                   {courseOptions.map((course, idx) => (
@@ -152,7 +173,7 @@ export default function CareerCV() {
               {/* EMAIL */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Email
+                  Email <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="email"
@@ -160,7 +181,7 @@ export default function CareerCV() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                  className="w-full border border-gray-300 focus:border-primary focus:outline-none rounded-lg px-4 py-3"
                   placeholder="Enter your email"
                 />
               </div>
@@ -168,7 +189,7 @@ export default function CareerCV() {
               {/* PHONE */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Phone Number
+                  Phone Number <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="tel"
@@ -176,29 +197,35 @@ export default function CareerCV() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3"
-                  placeholder="Enter your phone number"
+                  minLength="8"
+                  maxLength="10"
+                  pattern="[0-9]{8,10}"
+                  className="w-full border border-gray-300 focus:border-primary focus:outline-none  rounded-lg px-4 py-3"
+                  placeholder="Enter 8-10 digit phone number"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  Must be 8-10 digits only
+                </p>
               </div>
 
               {/* MESSAGE FIELD (NEW) */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Message / Description
+                  Message / Description <span className="text-red-600">*</span>
                 </label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Describe about your current situation, skills, or qualifications"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 h-28 resize-none"
+                  className="w-full border border-gray-300 focus:border-primary focus:outline-none  rounded-lg px-4 py-3 h-28 resize-none"
                 ></textarea>
               </div>
 
               {/* FILE UPLOAD */}
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Upload CV
+                  Upload CV <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="file"
@@ -206,7 +233,7 @@ export default function CareerCV() {
                   ref={fileInputRef}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 file:bg-red-600 file:text-white"
+                  className="w-full border border-gray-300 focus:border-primary focus:outline-none  rounded-lg px-4 py-3 file:bg-primary file:px-4 file:rounded-md file:text-white"
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 />
                 {formData.files && (
@@ -214,6 +241,9 @@ export default function CareerCV() {
                     📄 Selected: {formData.files.name}
                   </p>
                 )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Must Doc, Pdf or jpg only.
+                </p>
               </div>
 
               {/* SUBMIT BUTTON */}
@@ -223,7 +253,7 @@ export default function CareerCV() {
                 className={`w-full py-4 rounded-lg font-semibold text-lg ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700 text-white"
+                    : "bg-primary  text-white"
                 }`}
               >
                 {loading ? "Sending..." : "Submit CV"}

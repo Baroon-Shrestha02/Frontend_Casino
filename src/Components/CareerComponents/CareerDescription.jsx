@@ -68,7 +68,18 @@ export default function CareerDescription() {
   }, [id]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // For phone field, only allow digits and limit to 10 digits
+    if (name === "phone") {
+      const digitsOnly = value.replace(/\D/g, ""); // Remove non-digits
+      if (digitsOnly.length <= 10) {
+        setFormData({ ...formData, [name]: digitsOnly });
+      }
+      return;
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleFileChange = (e) => {
@@ -81,6 +92,13 @@ export default function CareerDescription() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedJob) return;
+
+    // Validate phone number
+    const phoneDigits = formData.phone.replace(/\D/g, "");
+    if (phoneDigits.length < 8 || phoneDigits.length > 10) {
+      alert("❌ Phone number must be between 8 and 10 digits.");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -239,7 +257,7 @@ export default function CareerDescription() {
               <ul className="space-y-3">
                 {job.highlights.map((point, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <FaCheckCircle className="text-primary mt-1 flex-shrink-0" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -252,7 +270,7 @@ export default function CareerDescription() {
               <ul className="space-y-3">
                 {job.requirements.map((req, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <FaCheckCircle className="text-primary mt-1 flex-shrink-0" />
                     <span>{req}</span>
                   </li>
                 ))}
@@ -265,7 +283,7 @@ export default function CareerDescription() {
               <ul className="space-y-3">
                 {job.benefits.map((benefit, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <FaCheckCircle className="text-red-600 mt-1 flex-shrink-0" />
+                    <FaCheckCircle className="text-primary mt-1 flex-shrink-0" />
                     <span>{benefit}</span>
                   </li>
                 ))}
@@ -276,7 +294,7 @@ export default function CareerDescription() {
             <div className="pt-6 border-t border-gray-100">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <FaCalendarAlt className="text-red-600 text-xl" />
+                  <FaCalendarAlt className="text-primary text-xl" />
                   <div>
                     <p className="text-sm">Application Deadline</p>
                     <p className="font-semibold">{job.deadline}</p>
@@ -287,7 +305,7 @@ export default function CareerDescription() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedJob(job)}
-                  className="bg-red-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-red-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                  className="bg-primary text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
                 >
                   <FaPaperPlane /> Apply Now
                 </motion.button>
@@ -358,7 +376,7 @@ export default function CareerDescription() {
                   <h2 className="text-3xl font-bold text-gray-800 mb-2">
                     Apply for Casino Dealer Position
                   </h2>
-                  <p className="text-lg text-red-600 font-semibold">
+                  <p className="text-lg text-primary font-semibold">
                     {selectedJob.title}
                   </p>
                 </div>
@@ -380,8 +398,8 @@ export default function CareerDescription() {
                   transition={{ delay: 0.1 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaUser className="inline mr-2 text-red-600" />
-                    Full Name *
+                    <FaUser className="inline mr-2 text-primary" />
+                    Full Name <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="text"
@@ -390,7 +408,7 @@ export default function CareerDescription() {
                     onChange={handleInputChange}
                     placeholder="John Doe"
                     required
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-primary focus:outline-none transition-colors"
                   />
                 </motion.div>
 
@@ -401,8 +419,8 @@ export default function CareerDescription() {
                   transition={{ delay: 0.2 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaEnvelope className="inline mr-2 text-red-600" />
-                    Email *
+                    <FaEnvelope className="inline mr-2 text-primary" />
+                    Email <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="email"
@@ -411,7 +429,7 @@ export default function CareerDescription() {
                     onChange={handleInputChange}
                     placeholder="john@example.com"
                     required
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-primary focus:outline-none transition-colors"
                   />
                 </motion.div>
 
@@ -422,18 +440,24 @@ export default function CareerDescription() {
                   transition={{ delay: 0.3 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaPhone className="inline mr-2 text-red-600" />
-                    Phone Number *
+                    <FaPhone className="inline mr-2 text-primary" />
+                    Phone Number <span className="text-red-600">*</span>
                   </label>
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    placeholder="+977 984-XXXXXXX"
+                    placeholder="Enter 8-10 digit phone number"
                     required
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors"
+                    minLength="8"
+                    maxLength="10"
+                    pattern="[0-9]{8,10}"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-primary focus:outline-none transition-colors"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Must be 8-10 digits only
+                  </p>
                 </motion.div>
 
                 {/* Cover Letter */}
@@ -451,7 +475,7 @@ export default function CareerDescription() {
                     onChange={handleInputChange}
                     rows="5"
                     placeholder="Tell us why you would be a great casino dealer..."
-                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-red-500 focus:outline-none transition-colors resize-none"
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-primary focus:outline-none transition-colors resize-none"
                   />
                 </motion.div>
 
@@ -462,14 +486,15 @@ export default function CareerDescription() {
                   transition={{ delay: 0.65 }}
                 >
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaFileUpload className="inline mr-2 text-red-600" />
-                    Upload Resume (Optional)
+                    <FaFileUpload className="inline mr-2 text-primary" />
+                    Upload Resume <span className="text-red-600">*</span>
                   </label>
                   <input
                     id="descriptionResumeUpload"
                     type="file"
                     accept=".pdf,.doc,.docx"
                     name="file"
+                    required
                     className="hidden"
                     onChange={handleFileChange}
                   />
@@ -479,7 +504,7 @@ export default function CareerDescription() {
                         .getElementById("descriptionResumeUpload")
                         ?.click()
                     }
-                    className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-red-500 transition-colors cursor-pointer"
+                    className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary transition-colors cursor-pointer"
                   >
                     <FaFileUpload className="text-4xl text-gray-400 mx-auto mb-2" />
                     {formData.files ? (
@@ -497,6 +522,9 @@ export default function CareerDescription() {
                       </>
                     )}
                   </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Must Doc, Pdf or jpg only.
+                  </p>
                 </motion.div>
 
                 {/* Submit & Cancel */}
@@ -523,7 +551,7 @@ export default function CareerDescription() {
                     className={`px-8 py-3 rounded-xl font-semibold transition-colors shadow-lg hover:shadow-xl flex items-center gap-2 ${
                       submitting
                         ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-red-600 hover:bg-red-700 text-white"
+                        : "bg-primary text-white"
                     }`}
                   >
                     {submitting ? (
