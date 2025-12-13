@@ -8,7 +8,7 @@ export default function WorkforceMain() {
   return (
     <div>
       <WorkforceHero />
-      <WorkforceIntro />
+      {/* <WorkforceIntro /> */}
       <WorkforceSystem />
       <WorkforceWhyUs />
     </div>
