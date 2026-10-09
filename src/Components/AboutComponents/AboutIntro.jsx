@@ -89,7 +89,7 @@ export default function AboutIntro() {
                 >
                   About{" "}
                   <span className="bg-gradient-to-r from-amber-600 to-amber-800 bg-clip-text text-transparent">
-                    Casino Training Nepal
+                    Ace Gaming Solutions
                   </span>
                 </h1>
 

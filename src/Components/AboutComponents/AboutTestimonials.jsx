@@ -64,8 +64,7 @@ const AboutTestimonials = () => {
             Hear From Our Students
           </h2>
           <p className="max-w-4xl text-base md:text-lg text-white">
-            Our students share their learning experiences at Casino Training
-            Nepal— from gaining confidence through hands-on practice to
+            Our students share their learning experiences at Ace Gaming Solutions— from gaining confidence through hands-on practice to
             receiving career guidance and job placement support that helped them
             take the next step in their journey.
           </p>

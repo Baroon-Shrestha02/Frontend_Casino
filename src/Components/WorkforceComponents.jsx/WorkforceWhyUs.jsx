@@ -56,7 +56,7 @@ export default function WorkforceWhyUs() {
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto italic">
             "Bring the full casino experience to life with a trained,
-            professional, and dedicated workforce from Casino Training Nepal —
+            professional, and dedicated workforce from Ace Gaming Solutions —
             your trusted partner for every role, every table, and every guest
             interaction."
           </p>
@@ -156,7 +156,7 @@ export default function WorkforceWhyUs() {
       <div className="italic max-w-3xl text-center mx-auto my-8">
         <p className="text-center text-xl">
           “Bring the full casino experience to life with a trained,
-          professional, and dedicated workforce from Casino Training Nepal —
+          professional, and dedicated workforce from Ace Gaming Solutions —
           your trusted partner for every role, every table, and every guest
           interaction.”
         </p>

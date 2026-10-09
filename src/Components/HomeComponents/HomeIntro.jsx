@@ -55,8 +55,8 @@ export default function HomeIntro() {
       {
         id: 2,
         type: "image",
-        src: "/uploads/main/fulllogo.jpg",
-        alt: "Training demo",
+        src: "/uploads/main/newlogo.png",
+        alt: "Ace Gaming Solutions",
         bgColor: "bg-gradient-to-br from-emerald-500 to-teal-600",
         rotation: 5,
         x: isLargeScreen ? 30 : 10,

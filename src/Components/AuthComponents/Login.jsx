@@ -80,10 +80,10 @@ function Login() {
             <>
               <div className="mb-8">
                 <div className="w-20 h-20 bg-whte bg-opacity-20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-                  <img src="uploads/main/logo2.png" alt="" />
+                  <img src="/uploads/main/newlogo.png" alt="Ace Gaming Solutions" />
                 </div>
                 <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                  Welcome to Casino Training Nepal
+                  Welcome to Ace Gaming Solutions
                 </h1>
                 <p className="text-xl text-blue-100 mb-8 leading-relaxed">
                   Manage your application with ease. Access powerful tools and

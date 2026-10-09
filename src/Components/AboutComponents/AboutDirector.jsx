@@ -29,9 +29,7 @@ export default function AboutDirector() {
               />
             </div>
             <div className="mt-6 text-center">
-              <h3 className="text-2xl font-bold text-gray-900">
-                Director's Name
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900">Swaraj Bhatt</h3>
               <p className="text-gray-600 mt-2">Founder & Director</p>
               <p className="text-sm text-gray-500 mt-4 leading-relaxed">
                 With over 20 years of experience in the casino industry, our
@@ -100,7 +98,7 @@ export default function AboutDirector() {
                   <footer className="flex items-center gap-4 pt-6 border-t border-blue-200">
                     <div className="w-12 h-0.5 bg-blue-600"></div>
                     <div>
-                      <p className="font-bold text-gray-900">Director's Name</p>
+                      <p className="font-bold text-gray-900">Swaraj Bhatt</p>
                       <p className="text-sm text-gray-600">
                         Founder & Director
                       </p>

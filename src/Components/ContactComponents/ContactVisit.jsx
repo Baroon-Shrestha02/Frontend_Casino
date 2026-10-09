@@ -32,7 +32,7 @@ export default function ContactVisit() {
       if (item.title === "Address") {
         const address = item.details?.[0] || "";
         if (address) {
-          const mapsUrl = `https://maps.app.goo.gl/KjS7Rihne8H2K9u36`;
+          const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Ace Gaming Solutions, " + address)}`;
           window.open(mapsUrl, "_blank", "noopener,noreferrer");
         }
       }
@@ -46,18 +46,18 @@ export default function ContactVisit() {
       icon: <MapPin />,
       title: "Address",
       details: [
-        "Talchikhel Gate, Satdobato, Lalitpur, Hansol Building 1st floor",
+        "Pathshala Nepal Foundation, Lakhe Chaur Marg, Kathmandu, Bagmati Province 44600",
       ],
     },
     {
       icon: <Phone />,
       title: "Phone",
-      details: ["+977 985-1407135"],
+      details: ["9851407135"],
     },
     {
       icon: <Mail />,
       title: "Email",
-      details: ["casinotrainingnepal@gmail.com"],
+      details: ["info@acegaming-solutions.com"],
     },
     {
       icon: <TimerIcon />,
@@ -167,16 +167,15 @@ export default function ContactVisit() {
           {/* Right Side - Embedded Map */}
           <div className="lg:pl-8">
             <div className="bg-gray-100 rounded-xl overflow-hidden shadow-lg h-full min-h-[600px]">
-              {/* Replace this iframe with your actual Google Maps embed */}
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.97093706996!2d85.31923819065544!3d27.659788289475983!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19cde03059fb%3A0xa3234286380fc73f!2sHANSOL%20Learning%20Center%20Pvt.%20Ltd.!5e1!3m2!1sen!2snp!4v1758878117656!5m2!1sen!2snp"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.748531591193!2d85.33125247551948!3d27.694166076190154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1921caf8d335%3A0x59a94aab217f5f99!2sAce%20Gaming%20Solutions!5e0!3m2!1sen!2snp!4v1790424588639!5m2!1sen!2snp"
                 width="100%"
                 height="600"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Our Office Location"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Ace Gaming Solutions Location"
                 className="w-full h-full"
               ></iframe>
             </div>

@@ -166,7 +166,11 @@ export default function Navbar() {
               to="/"
               className="text-2xl font-bold text-amber-500 hover:text-amber-400 transition-colors"
             >
-              Casino
+              <img
+                src="/uploads/main/newlogo.png"
+                alt="Ace Gaming Solutions"
+                className="h-14 w-auto object-contain"
+              />
             </Link>
 
             {/* Desktop Navigation */}

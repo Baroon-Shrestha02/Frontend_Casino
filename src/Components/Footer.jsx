@@ -28,7 +28,7 @@ export default function CasinoFooter() {
 
   const handleOpenMaps = (address) => {
     if (!address) return;
-    const url = `https://maps.app.goo.gl/KjS7Rihne8H2K9u36`;
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Ace Gaming Solutions, " + address)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -84,12 +84,12 @@ export default function CasinoFooter() {
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src="/uploads/main/logo2.png"
-                  alt="Casino Academy"
-                  className="w-12 h-12"
+                  src="/uploads/main/newlogo.png"
+                  alt="Ace Gaming Solutions"
+                  className="w-auto h-12 object-contain"
                 />
                 <h3 className="text-2xl font-bold text-yellow-300">
-                  Casino Traning Nepal
+                  Ace Gaming Solutions
                 </h3>
               </div>
               <p className="text-gray-300 text-sm leading-relaxed mb-4">
@@ -101,7 +101,7 @@ export default function CasinoFooter() {
                   className="flex items-center gap-2 cursor-pointer hover:text-yellow-300 transition-colors"
                   onClick={() =>
                     handleOpenMaps(
-                      "Talchikhel Gate, Satdobato, Lalitpur, Hansol Building 1st floor"
+                      "Pathshala Nepal Foundation, Lakhe Chaur Marg, Kathmandu, Bagmati Province 44600"
                     )
                   }
                   role="button"
@@ -110,31 +110,30 @@ export default function CasinoFooter() {
                 >
                   <MapPin className="w-4 h-4 text-yellow-300" />
                   <span>
-                    Talchikhel Gate, Satdobato, Lalitpur, Hansol Building 1st
-                    floor
+                    Pathshala Nepal Foundation, Lakhe Chaur Marg, Kathmandu, Bagmati Province 44600
                   </span>
                 </div>
                 <div
                   className="flex items-center gap-2 cursor-pointer hover:text-yellow-300 transition-colors"
-                  onClick={() => handleCopyPhone("+977 985-1407135")}
+                  onClick={() => handleCopyPhone("9851407135")}
                   role="button"
                   tabIndex={0}
                   aria-label="Copy phone number"
                 >
                   <Phone className="w-4 h-4 text-yellow-300" />
-                  <span>+977 985-1407135</span>
+                  <span>9851407135</span>
                 </div>
                 <div
                   className="flex items-center gap-2 cursor-pointer hover:text-yellow-300 transition-colors"
                   onClick={() =>
-                    handleOpenEmail("casinotrainingnepal@gmail.com")
+                    handleOpenEmail("info@acegaming-solutions.com")
                   }
                   role="button"
                   tabIndex={0}
                   aria-label="Send email"
                 >
                   <Mail className="w-4 h-4 text-yellow-300" />
-                  <span>casinotrainingnepal@gmail.com</span>
+                  <span>info@acegaming-solutions.com</span>
                 </div>
               </div>
             </div>
@@ -205,9 +204,9 @@ export default function CasinoFooter() {
             {/* Left: Company Name and Copyright */}
             <div className="text-sm text-gray-400">
               <p className="font-semibold text-white mb-1">
-                Casino Traning Nepal
+                Ace Gaming Solutions
               </p>
-              <p>&copy; 2025 Casino Traning Nepal. All rights reserved.</p>
+              <p>&copy; 2025 Ace Gaming Solutions. All rights reserved.</p>
             </div>
 
             {/* Right: Social Media Links */}

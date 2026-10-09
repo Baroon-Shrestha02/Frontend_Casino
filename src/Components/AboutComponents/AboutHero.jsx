@@ -5,7 +5,7 @@ export default function AboutHero() {
   return (
     <div>
       <HeroSection
-        title="Casino Training Nepal"
+        title="Ace Gaming Solutions"
         subtitle="Professional Dealer Academy."
         description="Nepal’s top Casino Dealer Training Center since 2014 – get job-ready with expert training and industry connections."
         image="uploads/about/hero.jpg"

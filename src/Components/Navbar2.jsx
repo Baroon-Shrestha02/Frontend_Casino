@@ -192,12 +192,12 @@ export default function Navbar2() {
                 <div className="flex items-center gap-2">
                   <div>
                     <img
-                      src="/uploads/main/logo2.png"
-                      alt=""
-                      className="h-14 w-14"
+                      src="/uploads/main/newlogo.png"
+                      alt="Ace Gaming Solutions"
+                      className="h-14 w-auto object-contain"
                     />
                   </div>
-                  <div className="hidden sm:block">Casino Traning Nepal</div>
+                  <div className="hidden sm:block">Ace Gaming Solutions</div>
                 </div>
               </Link>
             </div>
@@ -253,11 +253,11 @@ export default function Navbar2() {
                 >
                   <div className="flex items-center gap-2">
                     <img
-                      src="/uploads/main/logo2.png"
-                      alt="logo"
-                      className="h-14 w-14"
+                      src="/uploads/main/newlogo.png"
+                      alt="Ace Gaming Solutions"
+                      className="h-14 w-auto object-contain"
                     />
-                    <span>Casino Training Nepal</span>
+                    <span>Ace Gaming Solutions</span>
                   </div>
                 </Link>
 
